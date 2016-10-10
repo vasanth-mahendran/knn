@@ -9,7 +9,7 @@ start_time = time.time()
 k = 10
 kfcv_k = 10
 distance_metric = 'euclidean'
-data_set = 'ecoli'
+data_set = 'yeast'
 
 
 class KnnProcess(object):
@@ -30,8 +30,8 @@ class KnnProcess(object):
                 accuracy = KnnProcess.calculate_accuracy(validation['class'], validation['predicted_class'])
                 validations.append(validation)
                 i += 1
-                print('Accuracy for partition ', i, ' is ', accuracy)
-            print(KnnProcess.flatten_list_of_lists(validations))
+                print('Accuracy for partition ', i, ' is ', accuracy*100,'%')
+            # print(KnnProcess.flatten_list_of_lists(validations))
         else:
             print('Enter proper data set name')
             print("--- Knn Done: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
@@ -101,6 +101,13 @@ class KnnProcess(object):
             if column != 'class' and column != 'Sequence' and column != 'Id' and column != 'predicted_class':
                 euclidean_sum += math.pow((float(validate_row[column]) - float(training_row[column])), 2)
         return math.sqrt(euclidean_sum)
+    
+    def polynomial_kernel(columns, validate_row, training_row):
+        dot_product = 0
+        for column in columns:
+            if column != 'class' and column != 'Sequence' and column != 'Id' and column != 'predicted_class':
+                dot_product += float(validate_row[column]) * float(training_row[column]))
+        return math.pow((1 + dot_product),len(columns))
 
 
 knn_process_obj = KnnProcess()
