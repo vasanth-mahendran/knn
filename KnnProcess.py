@@ -1,6 +1,6 @@
 import math
 import pandas as pandas
-from kfcv import Kfcv
+from Kfcv import Kfcv
 from collections import OrderedDict
 from itertools import islice
 import time
@@ -14,7 +14,7 @@ data_set = 'ecoli'
 
 class KnnProcess(object):
     def __init__(self):
-        # self.get_inputs()
+        self.get_inputs()
         print("--- Starting: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
         kfcv_obj = Kfcv(data_set, kfcv_k)
         print("--- Parsed Files: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
@@ -34,7 +34,7 @@ class KnnProcess(object):
             print(KnnProcess.flatten_list_of_lists(validations))
         else:
             print('Enter proper data set name')
-            # print("--- Knn Done: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
+            print("--- Knn Done: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
 
     def get_inputs(self):
         global k
