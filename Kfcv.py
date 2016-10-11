@@ -30,6 +30,7 @@ class Kfcv:
                     column_max = records.loc[records[column].idxmax()][column]
                     column_min = records.loc[records[column].idxmin()][column]
                     records[column] = records[column].map(lambda x: (x - column_min) / (column_max - column_min))
+                    records[column] = records[column].astype('float64');
 
             # Saving the data fram as output csv file for reference.
             pandas.DataFrame(records).to_csv('output/result.csv', index=False)
