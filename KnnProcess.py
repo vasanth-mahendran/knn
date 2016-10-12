@@ -14,7 +14,8 @@ data_set = 'glass'
 class KnnProcess(object):
     def __init__(self):
         start_time = time.time()
-        self.get_inputs()
+        # Un comment this manually give parameters
+        #self.get_inputs()
         print("--- Starting: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
         kfcv_obj = Kfcv(data_set, kfcv_k)
         print("--- Parsed Files: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
@@ -171,88 +172,28 @@ class KnnProcess(object):
         for column in columns:
             dot_product += validate_row[column] * training_row[column]
         return math.pow((1 + dot_product),len(columns))
+    
+    @staticmethod
+    def run_batch():
+        global k
+        global data_set
+        global distance_metric
+        distance_metrics_list = ['euclidean','polynomial']
+        k_list = [1,2,3,5,10,15]
+        data_set_list = ['ecoli','yeast','glass']
 
-knn_process_obj = KnnProcess()
+        for data_set_batch in data_set_list:
+            for distance_metric_batch in distance_metrics_list:
+                for k_batch in k_list:
+                    k=k_batch
+                    data_set = data_set_batch
+                    distance_metric = distance_metric_batch
+                    knn_process_obj = KnnProcess()
 
-k = 2
-knn_process_obj = KnnProcess()
-k = 3
-knn_process_obj = KnnProcess()
-k = 5
-knn_process_obj = KnnProcess()
-k = 10
-knn_process_obj = KnnProcess()
-k = 15
-knn_process_obj = KnnProcess()
-
-distance_metric = 'polynomial'
-k = 1
-knn_process_obj = KnnProcess()
-k = 2
-knn_process_obj = KnnProcess()
-k = 3
-knn_process_obj = KnnProcess()
-k = 5
-knn_process_obj = KnnProcess()
-k = 10
-knn_process_obj = KnnProcess()
-k = 15
-knn_process_obj = KnnProcess()
-
-data_set ='yeast'
-distance_metric = 'euclidean'
-k = 1
-knn_process_obj = KnnProcess()
-k = 2
-knn_process_obj = KnnProcess()
-k = 3
-knn_process_obj = KnnProcess()
-k = 5
-knn_process_obj = KnnProcess()
-k = 10
-knn_process_obj = KnnProcess()
-k = 15
-knn_process_obj = KnnProcess()
-
-distance_metric = 'polynomial'
-k = 1
-knn_process_obj = KnnProcess()
-k = 2
-knn_process_obj = KnnProcess()
-k = 3
-knn_process_obj = KnnProcess()
-k = 5
-knn_process_obj = KnnProcess()
-k = 10
-knn_process_obj = KnnProcess()
-k = 15
-knn_process_obj = KnnProcess()
-
-data_set ='glass'
-distance_metric = 'euclidean'
-k = 1
-knn_process_obj = KnnProcess()
-k = 2
-knn_process_obj = KnnProcess()
-k = 3
-knn_process_obj = KnnProcess()
-k = 5
-knn_process_obj = KnnProcess()
-k = 10
-knn_process_obj = KnnProcess()
-k = 15
-knn_process_obj = KnnProcess()
-
-distance_metric = 'polynomial'
-k = 1
-knn_process_obj = KnnProcess()
-k = 2
-knn_process_obj = KnnProcess()
-k = 3
-knn_process_obj = KnnProcess()
-k = 5
-knn_process_obj = KnnProcess()
-k = 10
-knn_process_obj = KnnProcess()
-k = 15
-knn_process_obj = KnnProcess()
+# Un comment this give manual parameters   
+#knn_process_obj = KnnProcess()
+# Un comment this  runs the knn for differernt measures with different k and data set
+batch_start_time = time.time()
+print("--- Starting batch: %s minutes ---" % round(((time.time() - batch_start_time) / 60), 2))
+KnnProcess.run_batch()
+print("--- Ending batch: %s minutes ---" % round(((time.time() - batch_start_time) / 60), 2))
