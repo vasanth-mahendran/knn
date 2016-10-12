@@ -38,6 +38,7 @@ class Kfcv:
             # Splitting the records set into partitions
             partitions = Kfcv.split(records, math.ceil(len(records) / k_input))
             self.partitions = partitions
+            self.records = records
 
         except Exception as error:
             print("problem while processing the files", repr(error))
@@ -45,6 +46,9 @@ class Kfcv:
 
     def get_partitions(self):
         return self.partitions
+    
+    def get_records(self):
+        return self.records
 
     @staticmethod
     # Method to Split the List into K size of partitions

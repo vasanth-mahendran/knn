@@ -5,33 +5,31 @@ from collections import OrderedDict
 from itertools import islice
 import time
 
-start_time = time.time()
+
 k = 1
 kfcv_k = 10
-distance_metric = 'euclidean'
-data_set = 'ecoli'
+distance_metric = 'polynomial'
+data_set = 'glass'
 
 class KnnProcess(object):
     def __init__(self):
-        #self.get_inputs()
+        start_time = time.time()
+        self.get_inputs()
         print("--- Starting: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
         kfcv_obj = Kfcv(data_set, kfcv_k)
         print("--- Parsed Files: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
         if kfcv_obj.get_partitions() is not None:
-            validations = []
+            validations = pandas.DataFrame([], columns=list(kfcv_obj.get_records().columns.values))
             partitions = list(kfcv_obj.get_partitions())
-            i = 0
             for idx, validation in enumerate(partitions):
-                start_partition = time.time()
-                training = list(partitions)
-                del training[idx]
-                self.training = KnnProcess.flatten_list_of_lists(training)
-                validation = validation.merge(self.do_knn(validation), left_index=True, right_index=True)
-                validations.append(validation)
-                i += 1
+                training_list = list(partitions)
+                del training_list[idx]
+                self.training = KnnProcess.flatten_list_of_lists(training_list)
+                knn_validate = self.do_knn(validation)
+                validation = validation.merge(knn_validate, left_index=True, right_index=True)
+                validations = validations.append(validation)
             accuracy = KnnProcess.calculate_accuracy(validations['class'], validations['predicted_class'])
-            print('Accuracy of KNN for data set %s is %s with k %s and distance metric %s , time taken is %s' %(data_set, accuracy*100,k,distance_metric,round(((time.time() - start_partition) / 60), 2)))
-            # print(KnnProcess.flatten_list_of_lists(validations))
+            print('Accuracy of KNN for data set %s is %s with k %s and distance metric %s , time taken is %s' %(data_set, accuracy*100,k,distance_metric,round(((time.time() - start_time) / 60), 2)))
         else:
             print('Enter proper data set name')
         print("--- Knn Done: %s minutes ---" % round(((time.time() - start_time) / 60), 2))
@@ -100,7 +98,6 @@ class KnnProcess(object):
             raise Exception('Please enter proper inputs')
 
     def do_knn(self, validation):
-        validation = pandas.DataFrame(validation)
         predicted = validation.apply(self.predict_class, axis=1)
         return predicted
 
@@ -233,6 +230,20 @@ knn_process_obj = KnnProcess()
 
 data_set ='glass'
 distance_metric = 'euclidean'
+k = 1
+knn_process_obj = KnnProcess()
+k = 2
+knn_process_obj = KnnProcess()
+k = 3
+knn_process_obj = KnnProcess()
+k = 5
+knn_process_obj = KnnProcess()
+k = 10
+knn_process_obj = KnnProcess()
+k = 15
+knn_process_obj = KnnProcess()
+
+distance_metric = 'polynomial'
 k = 1
 knn_process_obj = KnnProcess()
 k = 2
