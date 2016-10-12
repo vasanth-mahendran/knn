@@ -190,9 +190,9 @@ class KnnProcess(object):
                     distance_metric = distance_metric_batch
                     knn_process_obj = KnnProcess()
 
-# Un comment this give manual parameters   
+# Un comment this for single execution 
 #knn_process_obj = KnnProcess()
-# Un comment this  runs the knn for differernt measures with different k and data set
+# Un comment this  runs a batch of knn for differernt measures with different k and data set
 batch_start_time = time.time()
 print("--- Starting batch: %s minutes ---" % round(((time.time() - batch_start_time) / 60), 2))
 KnnProcess.run_batch()
