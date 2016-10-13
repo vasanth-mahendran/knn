@@ -6,10 +6,11 @@ from itertools import islice
 import time
 
 
-k = 1
+k = 10
 kfcv_k = 10
 distance_metric = 'polynomial'
 data_set = 'glass'
+sigma = 0.98
 
 class KnnProcess(object):
     def __init__(self):
@@ -171,7 +172,9 @@ class KnnProcess(object):
 
         for column in columns:
             dot_product += validate_row[column] * training_row[column]
-        return math.pow((1 + dot_product),len(columns))
+        # (x+y)^3 = x^3 + y^3 + 3x^2y + 3y^2x
+        return (math.pow(1,3) + math.pow(dot_product,3) + (3*(math.pow(dot_product,2))*1) +
+        (3*(math.pow(1,2))*dot_product))
     
     @staticmethod
     def run_batch():
@@ -191,7 +194,7 @@ class KnnProcess(object):
                     knn_process_obj = KnnProcess()
 
 # Un comment this for single execution 
-#knn_process_obj = KnnProcess()
+knn_process_obj = KnnProcess()
 # Un comment this  runs a batch of knn for differernt measures with different k and data set
 batch_start_time = time.time()
 print("--- Starting batch: %s minutes ---" % round(((time.time() - batch_start_time) / 60), 2))
