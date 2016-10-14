@@ -9,7 +9,7 @@ import time
 k = 10
 kfcv_k = 10
 distance_metric = 'polynomial'
-data_set = 'glass'
+data_set = 'ecoli'
 sigma = 0.98
 
 class KnnProcess(object):
@@ -146,6 +146,8 @@ class KnnProcess(object):
             return KnnProcess.euclidean_distance(columns, validate_row, training_row)
         elif d_metric == 'polynomial':
             return KnnProcess.polynomial_kernel(columns, validate_row, training_row)
+        elif d_metric == 'radial':
+            return KnnProcess.rbf_kernel(columns, validate_row, training_row)
 
     @staticmethod
     def euclidean_distance(columns, validate_row, training_row):
@@ -162,7 +164,6 @@ class KnnProcess(object):
     
     @staticmethod
     def polynomial_kernel(columns, validate_row, training_row):
-        dot_product = 40
         if 'class' in columns:
             columns.remove('class')
         if 'Sequence' in columns:
@@ -170,18 +171,39 @@ class KnnProcess(object):
         if 'Id' in columns:
             columns.remove('Id')
 
-        for column in columns:
-            dot_product += validate_row[column] * training_row[column]
+        dot_product = KnnProcess.dot_product(validate_row,training_row,columns)
         # (x+y)^3 = x^3 + y^3 + 3x^2y + 3y^2x
         return (math.pow(1,3) + math.pow(dot_product,3) + (3*(math.pow(dot_product,2))*1) +
         (3*(math.pow(1,2))*dot_product))
     
     @staticmethod
+    def rbf_kernel(columns, validate_row, training_row):
+        if 'class' in columns:
+            columns.remove('class')
+        if 'Sequence' in columns:
+            columns.remove('Sequence')
+        if 'Id' in columns:
+            columns.remove('Id')
+        dot_product_xx = KnnProcess.dot_product(validate_row,validate_row,columns)
+        dot_product_xy = KnnProcess.dot_product(validate_row,training_row,columns)
+        dot_product_yy = KnnProcess.dot_product(training_row,training_row,columns)
+        # k(x,y) = exp(|x-y|^2 / sigma^2)
+        numerator = dot_product_xx + dot_product_yy - (2*dot_product_xy)
+        denominator = math.pow(sigma,2)
+        return math.exp(numerator/denominator)
+    
+    def dot_product(row_x,row_y,columns):
+        dot_product = 0
+        for column in columns:
+            dot_product += row_x[column] * row_y[column]
+        return dot_product
+
+    @staticmethod
     def run_batch():
         global k
         global data_set
         global distance_metric
-        distance_metrics_list = ['euclidean','polynomial']
+        distance_metrics_list = ['euclidean','polynomial','radial']
         k_list = [1,2,3,5,10,15]
         data_set_list = ['ecoli','yeast','glass']
 
